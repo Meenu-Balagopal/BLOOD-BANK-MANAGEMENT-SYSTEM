@@ -1,0 +1,231 @@
+<html>
+<head>
+<title>donor</title>
+
+<link rel="stylesheet" type="text/css" href="pro.css">
+</head>
+<body><center>
+<h2>1.Donor Registration</h2> <br><br><br>
+<form method ="post" name="frm" onsubmit="return Reg()">>
+<table>
+<tr><th>Donor_id<font color=red>*</font>:</th><td><input type="number" name="d_id"/></td></tr>
+
+<tr><th>Name <font color=red>*</font>:</th><td><input type="text" name="d_name" required/></td></tr>
+<tr><th>BloodGroup <font color=red>*</font>:</th><td><select name="dropdown">
+<option value="A+ve" selected>A+ve</option>
+<option value="B+ve">B+ve</option>
+<option value="0+ve">O+ve</option>
+<option value="AB+ve">AB+ve</option>
+<option value="A-ve">A-ve</option>
+<option value="B-ve">B-ve</option>
+<option value="O-ve">O-ve</option>
+<option value="AB-ve">AB-ve</option>
+</td></tr>
+<tr><th align="left">Password : </th><td align="left"><input type="password" name="pwd" required /></td></tr>
+
+<tr><th>Gender <font color=red>*</font>:</th><td><input type="radio" name="d_gender"value="Male" required/>Male
+<input type="radio" name="gender"value="Female"/>Female
+<input type="radio" name="gender"value="Others"/>Others</td></tr>
+<tr><th>Date Of Birth <font color=red>*</font>:</th><td><input type="date" name="d_dob" required/></td></tr>
+<tr><th>Address <font color=red>*</font>:</th><td><textarea rows="5" cols="50" name="d_address" required></textarea></td></tr>
+<tr><th>Phone Number <font color=red>*</font>:</th><td><input type="number" name="d_phn" required/></td></tr>
+<tr><th>Donor_email<font color=red>*</font>:</th><td><input type="text" name="d_email" required></td></tr>
+
+<tr><th>City <font color=red>*</font>:</th><td><input type="text" name="d_city" required/></td></tr>
+<tr><th>Weight <font color=red>*</font>:</th><td><input type="number" name="d_weight" required/></td></tr>
+<tr><th>Status <font color=red>*</font>:</th><td><select name="dropdown">
+<option value="Volunteer" selected>Volunteer</option>
+<option value="NonVolunteer">NonVolunteer</option>
+</select></td></tr>
+<tr><th>Last Donated Date:</th><td><input type="date" name="d_ldd" required/></td></tr>
+<tr><th></th><td><br><br><input type="submit" name="next" value="SUBMIT"></td></tr>
+</table>
+</form>
+</body>
+</html>
+
+
+
+<?php
+if(isset($_POST['submit']))
+{
+$conn = mysqli_connect ("localhost","root","");
+if(!$conn) {die("could not connect:".mysqli_error());}
+//else
+//echo"successful connection<br>";
+$db_fnd=mysqli_select_db($conn,"project");
+if(!$db_fnd) {die("could not connect:".mysqli_error() );}
+//else
+//echo"successful connection<br>";
+$did=$_POST['d_id'];
+$dpwd=$_POST['d_pwd'];
+$dn=$_POST['d_name'];
+$da=$_POST['d_address'];
+$ddob=$_POST['d_dob'];
+$dg=$_POST['d_gender'];
+$dph=$_POST['d_phn'];
+$dem=$_POST['d_email'];
+$dc=$_POST['d_city'];
+$db=$_POST['dropdown'];
+$dw=$_POST['d_weight'];
+$ds=$_POST['dropdown'];
+$dldd=$_POST['d_ldd'];
+$rl="donor";
+$qr=mysqli_query($conn,"INSERT INTO donor(d_id,d_name,d_bgroup,d_gender,d_dob,d_address,d_phn,d_email,d_city,d_weight,d_status,d_ldd)VALUES
+('$did','$dn','$db','$dg','$ddob','$da','$dph','$dem','$dc','$dw','$ds','$dldd')");
+$qry=mysqli_query($conn,"INSERT INTO login(User_Id,Password,Role)VALUES('$did','$dpwd','$rl')");
+if($qr)
+{
+  if($qry)
+   {
+    echo"Registration Successful<br>";
+    //header("refresh:3;url=Plgn.php");
+   }
+}
+else
+{
+ echo"Registration Unsuccessful:<hr>".mysqli_error($conn);
+ //header("refresh:5;url=Preg.php");
+}
+}
+?>
+
+<script>
+function Reg()
+ {
+	var di=document.forms["frm"]["d_id"];
+	var n=document.forms["frm"]["d_name"];
+	var db=document.forms["frm"]["dropdown"];
+	var p=document.forms["frm"]["d_pwd"];
+	var dg=document.forms["frm"]["d_gender"];
+	var d=document.forms["frm"]["d_dob"];
+	var a=document.forms["frm"]["d_address"];
+	var m=document.forms["frm"]["d_phn"];
+	var e=document.forms["frm"]["d_email"];
+	var c=document.forms["frm"]["d_city"];
+	var w=document.forms["frm"]["d_weight"];
+	var s=document.forms["frm"]["dropdown"];
+	var ldd=document.forms["frm"]["d_ldd"];
+	
+	if(di.value==" ")
+	{
+		alert("Please enter Donor Id");
+		di.focus();
+		return false;	
+	}
+	if(n.value==" ")
+	{
+		alert("Please enter name");
+		n.focus();
+		return false;	
+	}
+	var l=/^[A-Za-z]+$/;
+	if(!n.value.match(l))
+	{
+		alert("Please enter a valid name");
+		n.focus();
+		return false;
+	}
+	if(db.value==" ")
+	{
+		alert("Please enter donor's blood group");
+		db.focus();
+		return false;	
+	}
+	if(p.value==" ")
+	{
+		alert("Please enter password");
+		p.focus();
+		return false;	
+	}
+	if(p.value.length < 0||p.value.length < 5 )
+	{
+		alert("Enter a password with atleast 5 characters");
+		p.focus();
+		return false;
+	}
+	if(dg.value==" ")
+	{
+		alert("Please enter donor's gender");
+		dg.focus();
+		return false;	
+	}
+	if(d.value==" ")
+	{
+		alert("Please enter date of birth");
+		d.focus();
+		return false;	
+	}
+	if(a.value==" ")
+	{
+		window.alert("Please enter address");
+		a.focus();
+		return false;	
+	}
+	var al=/^[A-Za-z ]+$/;
+	if(!a.value.match(al))
+	{
+		alert("Please enter a valid address");
+		a.focus();
+		return false;
+	}
+	
+	if(m.value==" ")
+	{
+		alert("Please enter phone number");		
+		m.focus();
+		return false;	
+	}
+	if(m.value.length !=10)
+	{
+		alert("The mob_no must be 10 digits");
+		m.focus();
+		return false;
+	}
+	var mn=/^[0-9]+$/;
+	if(!m.value.match(mn))
+	{
+		alert("Please enter a valid mobile number");
+		m.focus();
+		return false;
+	}
+	if(e.value==" ")
+	{
+		alert("Please enter an email_id");
+		e.focus();
+		return false;	
+	}
+	if(e.value.indexOf("@",0)<0)
+	{
+		alert("Please enter a valid email_id");
+		e.focus();
+		return false;
+	}
+	if(e.value.indexOf(".com",0)<0)
+	{
+		alert("Please enter a valid email_id");
+		e.focus();
+		return false;
+	}
+	if(c.value==" ")
+	{
+		alert("Please enter city");
+		c.focus();
+		return false;	
+	}
+	if(w.value==" ")
+	{
+		alert("Please enter weight");
+		w.focus();
+		return false;	
+	}
+	if(s.value==" ")
+	{
+		alert("Please enter status");
+		s.focus();
+		return false;	
+	}
+	
+	return true;
+ }
+</script>
